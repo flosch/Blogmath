@@ -100,11 +100,11 @@ def tokenize(src):
             col += 1
             src = src[1:]
         elif src[0] in [" ", "\t", "\r"]:
-            # Ignore whitespace
+            # Whitespace ignorieren
             col += 1
             src = src[1:]
         elif src[0] == '\n':
-            # Ignore new line, but reset column to 1 and add 1 to line
+            # Zeilenumbruch weitestgehend ignorieren, jedoch Zeile und Spalte aktualisieren
             line += 1
             col = 1
             src = src[1:]
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     // Ergebnis berechnen von 5^2
     var result = pow(5);
     
-    // Ergebnis berechnen von result
+    // Ergebnis berechnen von 25^0.5 (Wurzel von 25)
     var result2 = sqrt(result);
 
     // Ergebnis ausgeben
