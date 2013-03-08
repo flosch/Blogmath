@@ -1,0 +1,18 @@
+var c = 2; // Exponent
+var s = 0.5;
+
+// Funktion zur Potenzierung
+lambda pow(a) = a^c;
+    
+// Funktion zum Wurzelziehen
+lambda sqrt(a) = a^s;
+
+// Ergebnis berechnen von 5^2
+var result = pow(5);
+    
+// Ergebnis berechnen von 25^0.5
+var result2 = sqrt(result);
+
+// Ergebnis ausgeben
+print(result);   // Gibt 25 aus
+print(result2);  // Gibt 5 aus
