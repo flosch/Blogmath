@@ -6,8 +6,7 @@ A simple sample compiler - see my compiler course at http://blog.florian-schlach
 Usage
 =====
 
-  $ cat test1.bm
-  
+	$ cat test1.bm
 	var c = 2; // Exponent
   
 	var s = 0.5;
