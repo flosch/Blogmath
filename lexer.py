@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import sys
 
 TOKEN_IDENTIFIER = 1
 TOKEN_KEYWORD = 2
@@ -11,6 +10,7 @@ TOKEN_BRACEOPEN = 5
 TOKEN_BRACECLOSE = 6
 TOKEN_ASSIGN = 7
 TOKEN_SEMICOLON = 8
+TOKEN_COMMA = 9
 
 RESERVED_KEYWORDS = ["var", "lambda"]
 
@@ -28,7 +28,11 @@ tokens_natural = {
     TOKEN_BRACECLOSE: "Closed brace",
     TOKEN_ASSIGN: "Assign",
     TOKEN_SEMICOLON: "Semicolon",
+    TOKEN_COMMA: "Comma",
 }
+
+class LexerException(Exception): pass
+class LexerSyntaxException(LexerException): pass
 
 class Token(object):
     def __init__(self, line, col, typ, content):
@@ -43,9 +47,12 @@ class Token(object):
     def __str__(self):
         return "<Token line=%d col=%d type=%s content='%s'>" % \
             (self.line, self.col, self.get_type_string(), self.content)
+    
+    def __repr__(self):
+        return str(self)
 
 def error(line, col, msg):
-    sys.exit("[Syntaxerror Line %d Col %d] %s" % (line, col, msg))
+    raise LexerSyntaxException("[Syntaxerror Line %d Col %d] %s" % (line, col, msg))
 
 def tokenize(src):
     tokens = []
@@ -62,14 +69,14 @@ def tokenize(src):
             else:
                 tokens.append(Token(line, col, TOKEN_IDENTIFIER, content))
             
-            src = src[len(content):] # Anfang des src verschieben
-            col += len(content) # Column addieren
+            src = src[len(content):]  # Anfang des src verschieben
+            col += len(content)  # Column addieren
         elif re_number.match(src):
             content = re_number.findall(src)[0]
             tokens.append(Token(line, col, TOKEN_NUMBER, content))
             
-            src = src[len(content):] # Anfang des src verschieben
-            col += len(content) # Column addieren
+            src = src[len(content):]  # Anfang des src verschieben
+            col += len(content)  # Column addieren
         elif src.startswith("//"):
             # Behandlung des Kommentars
             while len(src) > 0 and src[0] != "\n":
@@ -99,12 +106,16 @@ def tokenize(src):
             tokens.append(Token(line, col, TOKEN_BRACECLOSE, src[0]))
             col += 1
             src = src[1:]
+        elif src[0] == ",":
+            tokens.append(Token(line, col, TOKEN_COMMA, src[0]))
+            col += 1
+            src = src[1:]
         elif src[0] in [" ", "\t", "\r"]:
-            # Whitespace ignorieren
+            # Ignore whitespace
             col += 1
             src = src[1:]
         elif src[0] == '\n':
-            # Zeilenumbruch weitestgehend ignorieren, jedoch Zeile und Spalte aktualisieren
+            # Ignore new line, but reset column to 1 and add 1 to line
             line += 1
             col = 1
             src = src[1:]
@@ -115,7 +126,6 @@ def tokenize(src):
 
 if __name__ == "__main__":
     # Test tokenize
-    
     tokens = tokenize("""
     var c = 2; // Exponent
     var s = 0.5;
@@ -129,7 +139,7 @@ if __name__ == "__main__":
     // Ergebnis berechnen von 5^2
     var result = pow(5);
     
-    // Ergebnis berechnen von 25^0.5 (Wurzel von 25)
+    // Ergebnis berechnen von result
     var result2 = sqrt(result);
 
     // Ergebnis ausgeben
