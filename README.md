@@ -1,7 +1,7 @@
 Blogmath
 ========
 
-A simple sample compiler - see my compiler course at http://blog.florian-schlachter.de/2013/02/compilerbau-grundlagen.html
+A simple sample compiler/interpreter - see my compiler course at http://blog.florian-schlachter.de/2013/02/compilerbau-grundlagen.html
 
 Usage
 =====
